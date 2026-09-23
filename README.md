@@ -1,25 +1,29 @@
 # Striver's 45-Day Challenge — 180 SDE Problems
 
-## Structure
+A structured repository for solving Striver's 180-problem SDE sheet over 45 days,
+testing each solution from a root runner, recording daily progress in Markdown,
+and pushing one verified commit per day.
 
-Mirrors the 45-day SDE sheet (180 problems). Problems live in `Topic/Subtopic/`
-folders; each file is a pure LeetCode `Solution` class. All test cases live in
-`main.py` / `main.cpp` only.
+## Repository structure
 
-```
+Solutions mirror the sheet's topic and subtopic hierarchy. A Java solution lives at
+`Topic/Subtopic/Solution.java`.
+
+```text
 .
-├── main.py                 # Python runner — solutions imported, test cases here
-├── main.cpp                # C++ runner — solutions included, test cases here
+├── main.java                # Java test runner and problem registry
+├── main.py                  # Python test runner
+├── main.cpp                 # C++ test runner
 ├── Arrays/
 │   ├── LinearScan/
 │   ├── TwoPointers/
 │   └── DivideAndConquer/
-├── Hashing/
-│   └── HashingAndPrefixSums/
 ├── BinarySearch/
 │   ├── BinarySearch/
 │   ├── SearchOnAnswer/
 │   └── PartitionSearch/
+├── Hashing/
+│   └── HashingAndPrefixSums/
 ├── SlidingWindowAndTwoPointers/
 │   ├── SlidingWindow/
 │   └── CountingWindows/
@@ -28,46 +32,120 @@ folders; each file is a pure LeetCode `Solution` class. All test cases live in
 │   └── Backtracking/
 ├── LinkedList/
 │   └── FastAndSlowPointers/
-├── logs/
-│   └── daily_log.md        # per-day structured logbook
-└── .github/workflows/
-    └── daily-commit.yml    # auto commits + pushes every day
+└── logs/
+    └── daily_log.md         # one Markdown logbook for all 45 days
 ```
 
-## Principles
+The subtopic folders are currently empty so the first solution can establish the
+naming pattern. Each problem uses a short, unique slug such as `two-sum` or
+`set-matrix-zeroes`.
 
-- **One language per problem.** A problem is solved in Python *or* C++, never both.
-- **Problem files are pure solutions** — just the LeetCode `Solution` class.
-- **All test cases live in `main.py` / `main.cpp` only.**
+## Rules
 
-## Workflow
+- Solve each problem in **one language only**: Java, Python, or C++.
+- Keep each solution file limited to the LeetCode `Solution` class.
+- Keep all test inputs and expected outputs in the corresponding root runner.
+- Add every problem to exactly one runner.
+- Record every completed problem in `logs/daily_log.md`.
+- Test before committing; a daily commit should never contain a knowingly failing
+  solution.
 
-1. Tell opencode the **problem name**, **language** (python / cpp), and the
-   **method name**. It will:
-   - create the solution file in the right `Topic/Subtopic/` folder
-   - add an entry to `KNOWN_PROBLEMS` + `TEST_CASES` in `main.py` (or the equivalent
-     in `main.cpp` for C++)
-   - log the problem in `logs/daily_log.md`
-2. Fill in the solution, then run the matching runner.
-3. Commit + push daily — done automatically by the GitHub Actions workflow.
+## Daily workflow
 
-### main.py
+1. Create the solution in the matching `Topic/Subtopic/` folder.
+2. Register the problem and at least one test case in the selected runner.
+3. Run that problem and then run the complete runner.
+4. Add a structured problem entry to today's section in `logs/daily_log.md`.
+5. Review the changes, commit them, and push them to GitHub.
+
+For Java, `Topic/Subtopic/Solution.java` must contain a public class named
+`Solution`, and the file must declare its package:
+
+```java
+package Arrays.LinearScan;
+
+import java.util.List;
+
+public class Solution {
+    public List<Integer> subarraySum(int[] nums, int k) {
+        // solution
+    }
+}
+```
+
+The package name must exactly match the solution's folders. For example,
+`Arrays/LinearScan/Solution.java` uses `package Arrays.LinearScan;`.
+
+## Java runner
+
+Register each Java problem in the static block in `main.java`. The registration
+contains its slug, fully qualified `Solution` class, LeetCode method name, and one
+or more test cases:
+
+```java
+register(
+    "subarray-sum-equals-k",
+    "Arrays.LinearScan.Solution",
+    "subarraySum",
+    new TestCase(
+        "example 1",
+        () -> new Object[] {new int[] {1, 1, 1}, 2},
+        2
+    )
+);
+```
+
+A test input is a supplier, so every run receives fresh, mutable input. For a Java
+method returning `void`, the runner automatically compares the mutated first
+argument with the expected result. Methods that return a value are compared by
+their return value. Primitive arrays, nested arrays, and lists are supported.
+
+Compile **all** Java files together. Do not compile only `main.java`, because Java
+loads registered solution classes by their package-qualified names.
+
+PowerShell:
+
+```powershell
+$sources = Get-ChildItem -Path . -Recurse -Filter *.java | ForEach-Object { $_.FullName }
+javac $sources
+java main
+java main subarray-sum-equals-k
+```
+
+Git Bash or macOS/Linux:
+
+```sh
+find . -name "*.java" -print0 | xargs -0 javac
+java main
+java main subarray-sum-equals-k
+```
+
+Running without a slug executes all registered problems. Running with an unknown
+slug prints the available problem slugs. Generated `*.class` files are ignored by
+Git.
+
+## Python runner
+
+Register the problem in `KNOWN_PROBLEMS` and its cases in `TEST_CASES` in
+`main.py`:
 
 ```python
-# ("topic.subtopic", "module_name", "method_name")
 KNOWN_PROBLEMS = {
     "set-matrix-zeroes": ("Arrays.LinearScan", "SetMatrixZeroes", "setZeroes"),
 }
 
-# (input_args_tuple, expected_output)
 TEST_CASES = {
     "set-matrix-zeroes": [
-        (([[1, 1, 1], [1, 0, 1], [1, 1, 1]],), [[1, 0, 1], [0, 0, 0], [1, 0, 1]]),
+        (
+            ([[1, 1, 1], [1, 0, 1], [1, 1, 1]],),
+            [[1, 0, 1], [0, 0, 0], [1, 0, 1]],
+        ),
     ],
 }
 ```
 
-Solution file `Arrays/LinearScan/SetMatrixZeroes.py` contains only:
+The corresponding solution is `Arrays/LinearScan/SetMatrixZeroes.py` and contains
+only:
 
 ```python
 class Solution:
@@ -75,38 +153,54 @@ class Solution:
         ...
 ```
 
-For in-place methods (return `None`), the runner compares the mutated first argument
-against `expected`. Otherwise it compares the return value.
-
-Run:
+Run all or one problem with:
 
 ```sh
-python main.py                    # all problems
-python main.py set-matrix-zeroes  # one problem
+python main.py
+python main.py set-matrix-zeroes
 ```
 
-### main.cpp
+## C++ runner
 
-Test cases live in `main.cpp` as `run_<slug>()` functions; solution files contain only
-the namespaced `Solution` class. Register with `#include` + `PROBLEMS` map. See the
-comments in `main.cpp`.
+For C++, include each solution in `main.cpp`, add a `run_<slug>()` function with
+its test cases, and register that function in `PROBLEMS`. The solution file itself
+contains only the namespaced `Solution` class.
 
 ```sh
 g++ -std=c++17 main.cpp -o main
-./main                      # run all problems
-./main set-matrix-zeroes    # run one problem
+./main
+./main set-matrix-zeroes
 ```
 
-## GitHub Actions
+## Daily Markdown log
 
-The `daily-commit.yml` workflow runs daily (18:30 UTC = midnight IST) and pushes any
-uncommitted changes to `main`. No local `git push` needed — just work on your files;
-GitHub handles the rest.
+`logs/daily_log.md` is the source of truth for the challenge. It records:
 
-When opening a new repo/org, make sure Actions has **Write** permission:
-Repo → Settings → Actions → General → Workflow permissions → "Read and write permissions".
+- overall days and problems completed;
+- the date, topic, subtopic, problems solved, and total time;
+- a short summary and next-day plan;
+- one section per problem containing its LeetCode link, solution link, status,
+  approach, complexity, mistakes, learning, and next step;
+- test status, so the repository records evidence that the solution was run.
 
-## Regenerating the C++ binary
+For each new day, append one block at the end of the file and update the counters
+at the top. Keep solved and attempted problems distinct: use **Solved** for a
+passing solution, **Unsolved** for an incomplete attempt, and **Need Review** for
+a passing solution that should be revisited.
 
-`./main`, `a.out`, `__pycache__/`, etc. are gitignored. Rebuild with
-`g++ -std=c++17 main.cpp -o main`.
+## Manual daily GitHub commit
+
+Automatic pushes are intentionally disabled. After the Java/Python/C++ tests pass
+and the log is updated:
+
+```powershell
+git status
+git add main.java logs/daily_log.md
+git add "Topic/Subtopic/Solution.java"
+git commit -m "feat(Arrays): solve set-matrix-zeroes"
+git push origin main
+```
+
+Replace the runner, solution path, and commit message with the files and problem
+actually worked on. If the problem is solved in Python or C++, stage that runner
+instead of `main.java`.
