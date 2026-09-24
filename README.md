@@ -12,18 +12,16 @@ Solutions mirror the sheet's topic and subtopic hierarchy. A Java solution lives
 ```text
 .
 ├── main.java                # Java test runner and problem registry
-├── main.py                  # Python test runner
-├── main.cpp                 # C++ test runner
 ├── Arrays/
 │   ├── LinearScan/
 │   ├── TwoPointers/
 │   └── DivideAndConquer/
+├── Hashing/
+│   └── HashingAndPrefixSums/
 ├── BinarySearch/
 │   ├── BinarySearch/
 │   ├── SearchOnAnswer/
 │   └── PartitionSearch/
-├── Hashing/
-│   └── HashingAndPrefixSums/
 ├── SlidingWindowAndTwoPointers/
 │   ├── SlidingWindow/
 │   └── CountingWindows/
@@ -33,8 +31,9 @@ Solutions mirror the sheet's topic and subtopic hierarchy. A Java solution lives
 ├── LinkedList/
 │   └── FastAndSlowPointers/
 └── logs/
-    └── daily_log.md         # one Markdown logbook for all 45 days
-```
+    └── daily_log.md         # per-day structured logbook
+└── .github/workflows/
+    └── daily-commit.yml    # auto commits + pushes every day
 
 The subtopic folders are currently empty so the first solution can establish the
 naming pattern. Each problem uses a short, unique slug such as `two-sum` or
