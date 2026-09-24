@@ -7,3 +7,6 @@ venv/
 *.exe
 a.out
 /main
+.idea/
+*.iml
+out/
