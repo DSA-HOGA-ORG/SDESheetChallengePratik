@@ -54,7 +54,7 @@ public final class main {
         }
 
         if (PROBLEMS.isEmpty()) {
-            System.out.println("No problems registered yet. Add the first one in main.java.");
+            System.out.println("No problems registered yet. Add the first one in MajorityElementI.java.");
             return;
         }
 
@@ -94,7 +94,7 @@ public final class main {
             solution = solutionClass.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException exception) {
             System.out.println("  [ERROR] Cannot load " + problem.solutionClass());
-            System.out.println("          Compile all .java files before running main.java.");
+            System.out.println("          Compile all .java files before running MajorityElementI.java.");
             System.out.println("          " + rootMessage(exception));
             return 1;
         }

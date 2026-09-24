@@ -78,7 +78,7 @@ The package name must exactly match the solution's folders. For example,
 
 ## Java runner
 
-Register each Java problem in the static block in `main.java`. The registration
+Register each Java problem in the static block in `MajorityElementI.java`. The registration
 contains its slug, fully qualified `Solution` class, LeetCode method name, and one
 or more test cases:
 
@@ -100,7 +100,7 @@ method returning `void`, the runner automatically compares the mutated first
 argument with the expected result. Methods that return a value are compared by
 their return value. Primitive arrays, nested arrays, and lists are supported.
 
-Compile **all** Java files together. Do not compile only `main.java`, because Java
+Compile **all** Java files together. Do not compile only `MajorityElementI.java`, because Java
 loads registered solution classes by their package-qualified names.
 
 PowerShell:
@@ -203,4 +203,4 @@ git push origin main
 
 Replace the runner, solution path, and commit message with the files and problem
 actually worked on. If the problem is solved in Python or C++, stage that runner
-instead of `main.java`.
+instead of `MajorityElementI.java`.

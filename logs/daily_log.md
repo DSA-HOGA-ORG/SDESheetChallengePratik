@@ -75,7 +75,7 @@ DAY TEMPLATE
 - **Method:** —
 - **Status:** ☐ Solved | ☐ Unsolved | ☐ Need Review
 - **Time taken:** —
-- **Tests:** — (for example, `main.java`: 3/3 passed)
+- **Tests:** — (for example, `MajorityElementI.java`: 3/3 passed)
 - **Approach:**
   - <!-- Idea, invariant, algorithm, or useful heuristic. -->
 - **Complexity:** Time O(?) / Space O(?)
